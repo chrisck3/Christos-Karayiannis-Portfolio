@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Christos Karayiannis</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .project-container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 50px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+
+        .back-btn:hover {
+            color: #2980b9;
+        }
+
+        .project-title {
+            font-size: 2.8em;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .project-desc {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        /* Gallery Grid Setup */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            /* Makes it clear the image is clickable */
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.03);
+        }
+
+        /* NEW: Lightbox Modal Styles */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            /* Dark faded background */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox-modal.show .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .lightbox-close:hover {
+            color: #bdc3c7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h2>CK.</h2>
+        <div><a href="index.html">Back to Portfolio</a></div>
+    </nav>
+
+    <div class="project-container">
+        <a href="index.html" class="back-btn">&#8592; Back to Portfolio</a>
+
+        <h1 class="project-title" id="proj-title">Loading Project...</h1>
+        <p class="project-desc" id="proj-desc"></p>
+
+        <div class="image-gallery" id="proj-gallery"></div>
+    </div>
+
+    <div id="lightbox" class="lightbox-modal" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" src="" alt="Expanded View">
+    </div>
+
+    <script>
+        // Database specific to the project pages
+        const projectData = {
+            '1': {
+                title: 'Quadcopter Project',
+                desc: 'Here is an in-depth look at my Quadcopter project. I designed and built this from the ground up, utilizing mechanical design principles and hands-on manufacturing to create a fully functioning drone.',
+                images: [
+                    'images/quadcopter-1.jpg',
+                    'images/quadcopter-2.jpg',
+                    'images/quadcopter-3.jpg',
+                    'images/quadcopter-4.jpg'
+                ]
+            },
+            '2': {
+                title: 'Robot Walker Project',
+                desc: 'Details and information about the Robot Walker Project will be displayed here. You can add images for this project to the array below when you are ready.',
+                images: []
+            },
+            '3': {
+                title: 'Machine Learning Projects',
+                desc: 'Details and information about my Machine Learning Projects. You can add screenshots or graphics to the array below.',
+                images: []
+            }
+        };
+
+        // NEW: Functions to open and close the Lightbox
+        function openLightbox(imgSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = imgSrc;
+            lightbox.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('show');
+            document.body.style.overflow = 'auto'; // Restore background scrolling
+        }
+
+        // Grab the "?id=1" from the URL and match it to your database
+        const params = new URLSearchParams(window.location.search);
+        const projectId = params.get('id');
+        const data = projectData[projectId];
+
+        if (data) {
+            document.getElementById('proj-title').innerText = data.title;
+            document.getElementById('proj-desc').innerText = data.desc;
+
+            const gallery = document.getElementById('proj-gallery');
+            if (data.images.length > 0) {
+                data.images.forEach(imgSrc => {
+                    // NEW: Added the onclick trigger here
+                    gallery.innerHTML += `<img src="${imgSrc}" alt="${data.title} Image" onclick="openLightbox(this.src)">`;
+                });
+            } else {
+                gallery.innerHTML = '<p><em>More images coming soon...</em></p>';
+            }
+        } else {
+            document.getElementById('proj-title').innerText = 'Project Not Found';
+            document.getElementById('proj-desc').innerText = 'The project you are looking for does not exist or has been moved.';
+        }
+    </script>
+
+</body>
+
+</html>

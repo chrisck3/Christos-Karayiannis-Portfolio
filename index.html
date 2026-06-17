@@ -5,63 +5,519 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Christos Karayiannis | Portfolio</title>
-    <!-- This line links your HTML to your CSS file -->
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* General Page Setup */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .color-edu {
+            background-color: #e0e0e0;
+        }
+
+        .color-edu h3,
+        .color-edu p,
+        .color-edu .year {
+            color: #333;
+        }
+
+        .color-extra {
+            background-color: #5dade2;
+        }
+
+        .color-extra h3,
+        .color-extra p,
+        .color-extra .year {
+            color: #ffffff;
+        }
+
+        .color-work {
+            background-color: #f4d03f;
+        }
+
+        .color-work h3,
+        .color-work p,
+        .color-work .year {
+            color: #333;
+        }
+
+        .details-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .experience-details-box {
+            display: none;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            text-align: left;
+            flex: 1;
+            max-width: 800px;
+            transition: all 0.4s ease;
+            margin: 0;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .show-fancy {
+            display: block !important;
+            animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            line-height: 1;
+            opacity: 0.6;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .experience-details-box h3 {
+            margin-top: 0;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-right: 40px;
+        }
+
+        .experience-details-box p {
+            line-height: 1.8;
+            font-size: 1.1em;
+            margin: 0;
+        }
+
+        .detail-images-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Added cursor: pointer so users know they can click it */
+        .detail-real-img {
+            width: 280px;
+            height: 210px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .detail-real-img:hover {
+            transform: scale(1.03);
+        }
+
+        .detail-img-placeholder {
+            width: 280px;
+            height: 210px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px dashed;
+            transition: all 0.3s ease;
+        }
+
+        .side-nav-card {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            width: 200px;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.4;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .show-side-card {
+            display: flex !important;
+        }
+
+        .side-nav-card.empty-nav {
+            visibility: hidden;
+        }
+
+        .side-nav-card:hover {
+            opacity: 1 !important;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .prev-card {
+            text-align: left;
+        }
+
+        .next-card {
+            text-align: right;
+        }
+
+        .side-nav-card small {
+            display: block;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .side-nav-card h4 {
+            margin: 0;
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
+
+        /* Branching Timeline Styles */
+        .flowchart-container {
+            display: flex;
+            align-items: flex-start;
+            overflow-x: auto;
+            padding: 20px;
+            gap: 15px;
+            margin-top: 30px;
+            scrollbar-width: thin;
+            scroll-behavior: smooth;
+        }
+
+        .timeline-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flow-box {
+            min-width: 220px;
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .sub-box {
+            width: 90%;
+            min-width: 200px;
+            padding: 15px;
+        }
+
+        .sub-box h3 {
+            font-size: 1.1em;
+        }
+
+        .sub-box p {
+            font-size: 0.9em;
+        }
+
+        .sub-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .branch-line {
+            width: 2px;
+            height: 20px;
+            background-color: #bdc3c7;
+        }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: #7f8c8d;
+            min-width: 30px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* NEW: Lightbox Modal Styles */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            /* Dark faded background */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox-modal.show .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .lightbox-close:hover {
+            color: #bdc3c7;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Navigation Bar -->
     <nav>
         <h2>CK.</h2>
         <ul>
             <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#certifications">Certifications</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
-    <!-- Hero Section (The top of your website) -->
     <header>
-        <h1>Hi, I'm Christos.</h1>
-        <p>Welcome to my personal portfolio.</p>
+        <img src="images/profile.jpg" alt="Christos Karayiannis" class="profile-pic">
+        <div class="header-text">
+            <h1 class="hero-title">Hi, I'm Christos.</h1>
+            <p>I am a MEng Mechanical Engineer and I welcome you to my personal portfolio.</p>
+        </div>
     </header>
 
-    <!-- About Section -->
-    <section id="about">
+    <section id="about" style="padding-bottom: 20px;">
         <h2>About Me</h2>
-        <p>I am currently building my very first website from scratch.</p>
+        <p style="text-align: justify; max-width: 800px; margin: 0 auto; line-height: 1.8; font-size: 1.1em;">
+            Hi, I'm Christos! I am a highly motivated professional and a recent MEng Mechanical Engineering graduate
+            with proficiency in Python (Pandas, Scikit-learn, Keras), SQL, and machine learning diagnostics. I thrive on
+            solving complex problems, driving data-backed improvements, and bringing technical innovations to life.
+        </p>
     </section>
 
-    <!-- Projects Section -->
+    <section id="experience" style="padding-top: 20px;">
+        <h2>My Journey</h2>
+        <p style="color: #7f8c8d; margin-bottom: 20px;"><em>Click on any milestone below to learn more.</em></p>
+
+        <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div
+                    style="width: 20px; height: 20px; border-radius: 4px; background-color: #e0e0e0; border: 1px solid #ccc;">
+                </div>
+                <span style="font-weight: bold; color: #555; font-size: 1.2em;">Education</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; border-radius: 4px; background-color: #5dade2;"></div>
+                <span style="font-weight: bold; color: #555; font-size: 1.2em;">Extracurricular & Projects</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; border-radius: 4px; background-color: #f4d03f;"></div>
+                <span style="font-weight: bold; color: #555; font-size: 1.2em;">Work Experience</span>
+            </div>
+        </div>
+
+        <div class="flowchart-container">
+
+            <div class="timeline-column">
+                <div class="flow-box color-work" onclick="showDetails('tutor')">
+                    <div class="year">Present</div>
+                    <h3>Mathematics Tutor</h3>
+                    <p>MyTutor</p>
+                </div>
+            </div>
+
+            <div class="flow-arrow">&#10142;</div>
+
+            <div class="timeline-column">
+                <div class="flow-box color-edu" onclick="showDetails('meng')">
+                    <div class="year">2021 - 2026</div>
+                    <h3>MEng Mechanical Engineering</h3>
+                    <p>University of Southampton</p>
+                </div>
+
+                <div class="sub-branch">
+                    <div class="branch-line"></div>
+                    <div class="flow-box sub-box color-work" onclick="showDetails('jlr')">
+                        <div class="year">2024 - 2025</div>
+                        <h3>Hardware & Mechatronics Engineer</h3>
+                        <p>Jaguar Land Rover</p>
+                    </div>
+
+                    <div class="branch-line"></div>
+                    <div class="flow-box sub-box color-work" onclick="showDetails('research')">
+                        <div class="year">2023</div>
+                        <h3>Research Intern</h3>
+                        <p>University of Southampton</p>
+                    </div>
+
+                    <div class="branch-line"></div>
+                    <div class="flow-box sub-box color-extra" onclick="showDetails('sufst')">
+                        <div class="year">2022 - 2023</div>
+                        <h3>Vehicle Performance Engineer</h3>
+                        <p>Formula Student Team (SUFST)</p>
+                    </div>
+
+                    <div class="branch-line"></div>
+                    <div class="flow-box sub-box color-work" onclick="showDetails('kpmg')">
+                        <div class="year">2022</div>
+                        <h3>Audit Intern</h3>
+                        <p>KPMG</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">&#10142;</div>
+
+            <div class="timeline-column">
+                <div class="flow-box color-work" onclick="showDetails('army')">
+                    <div class="year">2020 - 2021</div>
+                    <h3>Special Forces Green Beret Soldier</h3>
+                    <p>Cyprus National Guard</p>
+                </div>
+            </div>
+
+            <div class="flow-arrow">&#10142;</div>
+
+            <div class="timeline-column">
+                <div class="flow-box color-edu" onclick="showDetails('alevels')">
+                    <div class="year">2013 - 2020</div>
+                    <h3>4 A-Levels</h3>
+                    <p>The English School of Nicosia</p>
+                </div>
+
+                <div class="sub-branch">
+                    <div class="branch-line"></div>
+                    <div class="flow-box sub-box color-extra" onclick="showDetails('ftc')">
+                        <div class="year">2017 - 2020</div>
+                        <h3>Mechanical Design Engineer</h3>
+                        <p>Robotics Team (FTC)</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="details-wrapper">
+            <div id="prev-card-side" class="side-nav-card prev-card"></div>
+
+            <div id="dynamic-details" class="experience-details-box">
+                <button class="close-btn" id="close-details-btn" onclick="closeDetails()">&times;</button>
+                <h3 id="detail-title">Role Title</h3>
+                <p id="detail-text">Role description goes here.</p>
+                <div id="detail-images" class="detail-images-container"></div>
+            </div>
+
+            <div id="next-card-side" class="side-nav-card next-card"></div>
+        </div>
+
+    </section>
+
     <section id="projects">
-        <h2>My Work</h2>
+        <h2>Personal Projects</h2>
+        <div class="project-grid">
+            <div class="project-card">
+                <h3>Quadcopter Project</h3>
+                <p>A brief description of what this project is and what tools I used to build it.</p>
+                <a href="project.html?id=1">View Project</a>
+            </div>
+            <div class="project-card">
+                <h3>Robot Walker Project</h3>
+                <p>A brief description of what this project is and what tools I used to build it.</p>
+                <a href="project.html?id=2">View Project</a>
+            </div>
+            <div class="project-card">
+                <h3>Machine Learning Projects</h3>
+                <p>A brief description of what this project is and what tools I used to build it.</p>
+                <a href="project.html?id=3">View Project</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="certifications" style="padding-top: 20px;">
+        <h2>Certifications</h2>
         <div class="project-grid">
 
-            <!-- Project 1 -->
             <div class="project-card">
-                <h3>Project One</h3>
-                <p>A brief description of what this project is and what tools I used to build it.</p>
-                <a href="#">View Project</a>
+                <h3>Certification One</h3>
+                <p style="margin-bottom: 5px;"><strong>Issuer:</strong> Issuing Organization</p>
+                <p style="margin-top: 0; color: #7f8c8d; font-size: 0.9em;">Issued: Month Year</p>
+                <a href="#" target="_blank">View Certificate</a>
             </div>
 
-            <!-- Project 2 -->
             <div class="project-card">
-                <h3>Project Two</h3>
-                <p>A brief description of what this project is and what tools I used to build it.</p>
-                <a href="#">View Project</a>
-            </div>
-
-            <!-- Project 3 -->
-            <div class="project-card">
-                <h3>Project Three</h3>
-                <p>A brief description of what this project is and what tools I used to build it.</p>
-                <a href="#">View Project</a>
+                <h3>Certification Two</h3>
+                <p style="margin-bottom: 5px;"><strong>Issuer:</strong> Issuing Organization</p>
+                <p style="margin-top: 0; color: #7f8c8d; font-size: 0.9em;">Issued: Month Year</p>
+                <a href="#" target="_blank">View Certificate</a>
             </div>
 
         </div>
     </section>
-    <section id="contact" style="background-color: #2c3e50; color: white;">
+
+    <section id="contact"
+        style="background-color: #2c3e50; background-image: url('images/galaxy.jpg'); background-size: cover; background-position: center; color: white; margin-top: 50px;">
         <h2>Let's Connect</h2>
         <p>Interested in working together or just want to say hi?</p>
         <br>
@@ -69,6 +525,221 @@
             style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Email
             Me</a>
     </section>
+
+    <div id="lightbox" class="lightbox-modal" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" src="" alt="Expanded View">
+    </div>
+
+    <script>
+        const scrollContainer = document.querySelector(".flowchart-container");
+
+        scrollContainer.addEventListener("wheel", (evt) => {
+            if (Math.abs(evt.deltaX) > Math.abs(evt.deltaY)) return;
+
+            const isAtStart = scrollContainer.scrollLeft === 0;
+            const isAtEnd = Math.ceil(scrollContainer.scrollLeft + scrollContainer.clientWidth) >= scrollContainer.scrollWidth;
+
+            if (evt.deltaY < 0 && isAtStart) return;
+            if (evt.deltaY > 0 && isAtEnd) return;
+
+            evt.preventDefault();
+            scrollContainer.scrollBy({
+                left: evt.deltaY < 0 ? -450 : 450,
+                behavior: "smooth"
+            });
+        }, { passive: false });
+
+        // Database for Timeline
+        const expData = {
+            'tutor': {
+                theme: 'work',
+                title: 'Mathematics Tutor @ MyTutor',
+                text: 'Delivered more than 270 lessons, earning a perfect 5-star rating across student reviews. Improved student exam scores by 15% through targeted interventions and root-cause analysis of student struggles.',
+                images: []
+            },
+            'meng': {
+                theme: 'edu',
+                title: 'MEng Mechanical Engineering @ Univ. of Southampton',
+                text: 'Predicted First Class. Dissertation focused on Gaussian Mixture Models (Python) through Machine Learning for Rolling Element Bearing fault diagnosis. Individual project utilized Convolutional Neural Networks (Python) for MNIST classification.',
+                images: []
+            },
+            'jlr': {
+                theme: 'work',
+                title: 'Hardware & Mechatronics Engineer @ Jaguar Land Rover',
+                text: 'Presented data-backed conclusions to 50+ stakeholders and eliminated redundant requirements via Excel statistical analysis. Streamlined Agile task management in Jira and implemented Six Sigma DMAIC techniques, reducing turnaround time by 2 days.',
+                images: [
+                    'images/JLR-1.jpg',
+                    'images/JLR-2.jpg',
+                    'images/JLR-3.jpg',
+                    'images/JLR-4.jpg',
+                    'images/JLR-5.jpg',
+                    'images/JLR-6.jpg'
+                ]
+            },
+            'research': {
+                theme: 'work',
+                title: 'Research Intern @ Univ. of Southampton',
+                text: 'Improved fluid extraction efficiency using an MSLA 3D-printer and micro-needle technology. Conducted intensive fluid flow assessments to optimise the manufacturing process.',
+                images: []
+            },
+            'sufst': {
+                theme: 'extra',
+                title: 'Vehicle Performance Engineer @ SUFST',
+                text: 'Designed 3 iterations of a slip angle sensor for the Formula Student car, providing key insights into vehicle dynamics. Generated real-time data from 15+ test laps to guide optimisation.',
+                images: []
+            },
+            'kpmg': {
+                theme: 'work',
+                title: 'Audit Intern @ KPMG',
+                text: 'Reviewed over 30 client financial statements, identifying and resolving discrepancies with strong attention to detail. Eliminated 2 hours of weekly manual work by optimising Excel-based financial reporting.',
+                images: []
+            },
+            'army': {
+                theme: 'work',
+                title: 'Special Forces Green Beret @ Cyprus National Guard',
+                text: 'Directed 10+ high-intensity hikes for junior soldiers, showcasing strong time management and strategic planning under pressure in demanding environments.',
+                images: []
+            },
+            'ftc': {
+                theme: 'extra',
+                title: 'Mechanical Design Engineer @ Robotics Team (FTC)',
+                text: 'Secured the prestigious Inspire Award and reached the top 20% internationally by achieving demanding team goals. Mentored refugees in STEM concepts to foster an inclusive learning environment.',
+                images: []
+            },
+            'alevels': {
+                theme: 'edu',
+                title: '4 A-Levels @ The English School of Nicosia',
+                text: 'Achieved outstanding results including Mathematics (A*), Further Mathematics (A), Physics (A), and Modern Greek (A).',
+                images: []
+            }
+        };
+
+        const themes = {
+            'edu': { bg: 'linear-gradient(135deg, #e0e0e0, #f5f5f5)', text: '#333333', imgBg: 'rgba(255, 255, 255, 0.6)', imgBorder: 'rgba(0, 0, 0, 0.2)', closeBtn: '#333' },
+            'extra': { bg: 'linear-gradient(135deg, #5dade2, #2980b9)', text: '#ffffff', imgBg: 'rgba(255, 255, 255, 0.15)', imgBorder: 'rgba(255, 255, 255, 0.4)', closeBtn: '#fff' },
+            'work': { bg: 'linear-gradient(135deg, #f4d03f, #f1c40f)', text: '#333333', imgBg: 'rgba(255, 255, 255, 0.5)', imgBorder: 'rgba(0, 0, 0, 0.2)', closeBtn: '#333' }
+        };
+
+        const timelineOrder = ['tutor', 'meng', 'jlr', 'research', 'sufst', 'kpmg', 'army', 'ftc', 'alevels'];
+        let activeBoxId = null;
+
+        // NEW: Functions to open and close the Lightbox
+        function openLightbox(imgSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = imgSrc;
+            lightbox.classList.add('show');
+            // Prevent background scrolling while viewing the image
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeDetails() {
+            const detailsBox = document.getElementById('dynamic-details');
+            const prevCard = document.getElementById('prev-card-side');
+            const nextCard = document.getElementById('next-card-side');
+
+            detailsBox.classList.remove('show-fancy');
+            prevCard.classList.remove('show-side-card');
+            nextCard.classList.remove('show-side-card');
+            activeBoxId = null;
+        }
+
+        function showDetails(id) {
+            if (activeBoxId === id) {
+                closeDetails();
+                return;
+            }
+
+            activeBoxId = id;
+            let currentIndex = timelineOrder.indexOf(id);
+            const data = expData[id];
+            const activeTheme = themes[data.theme];
+
+            const detailsBox = document.getElementById('dynamic-details');
+            const prevCard = document.getElementById('prev-card-side');
+            const nextCard = document.getElementById('next-card-side');
+            const titleElement = document.getElementById('detail-title');
+            const textElement = document.getElementById('detail-text');
+            const imagesContainer = document.getElementById('detail-images');
+            const closeBtn = document.getElementById('close-details-btn');
+
+            titleElement.innerText = data.title;
+            textElement.innerText = data.text;
+
+            detailsBox.style.background = activeTheme.bg;
+            detailsBox.style.color = activeTheme.text;
+            titleElement.style.color = activeTheme.text;
+            textElement.style.color = activeTheme.text;
+            closeBtn.style.color = activeTheme.closeBtn;
+
+            let imagesHTML = '';
+            const imgArray = data.images || [];
+
+            if (imgArray.length > 0) {
+                imgArray.forEach((imgSrc, index) => {
+                    // NEW: Added onclick trigger for the Lightbox
+                    imagesHTML += `<img src="${imgSrc}" class="detail-real-img" alt="Experience Image ${index + 1}" onclick="openLightbox(this.src)">`;
+                });
+            } else {
+                imagesHTML += `<div class="detail-img-placeholder" style="background-color: ${activeTheme.imgBg}; color: ${activeTheme.text}; border-color: ${activeTheme.imgBorder};">[Picture 1]</div>`;
+                imagesHTML += `<div class="detail-img-placeholder" style="background-color: ${activeTheme.imgBg}; color: ${activeTheme.text}; border-color: ${activeTheme.imgBorder};">[Picture 2]</div>`;
+            }
+
+            imagesContainer.innerHTML = imagesHTML;
+
+            if (currentIndex > 0) {
+                let prevId = timelineOrder[currentIndex - 1];
+                let prevData = expData[prevId];
+                let shortTitle = prevData.title.split(' @')[0];
+                let prevTheme = themes[prevData.theme];
+
+                prevCard.innerHTML = `<small>&#8592; Previous</small><h4>${shortTitle}</h4>`;
+                prevCard.style.background = prevTheme.bg;
+                prevCard.style.color = prevTheme.text;
+                prevCard.onclick = () => showDetails(prevId);
+
+                prevCard.classList.remove('empty-nav');
+                prevCard.classList.add('show-side-card');
+            } else {
+                prevCard.classList.add('empty-nav');
+                prevCard.classList.remove('show-side-card');
+                prevCard.onclick = null;
+            }
+
+            if (currentIndex < timelineOrder.length - 1) {
+                let nextId = timelineOrder[currentIndex + 1];
+                let nextData = expData[nextId];
+                let shortTitle = nextData.title.split(' @')[0];
+                let nextTheme = themes[nextData.theme];
+
+                nextCard.innerHTML = `<small>Next &#8594;</small><h4>${shortTitle}</h4>`;
+                nextCard.style.background = nextTheme.bg;
+                nextCard.style.color = nextTheme.text;
+                nextCard.onclick = () => showDetails(nextId);
+
+                nextCard.classList.remove('empty-nav');
+                nextCard.classList.add('show-side-card');
+            } else {
+                nextCard.classList.add('empty-nav');
+                nextCard.classList.remove('show-side-card');
+                nextCard.onclick = null;
+            }
+
+            detailsBox.classList.remove('show-fancy');
+            void detailsBox.offsetWidth;
+            detailsBox.classList.add('show-fancy');
+
+            detailsBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+
 </body>
 
 </html>
