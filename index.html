@@ -128,7 +128,6 @@
             flex-wrap: wrap;
         }
 
-        /* Added cursor: pointer so users know they can click it */
         .detail-real-img {
             width: 280px;
             height: 210px;
@@ -275,7 +274,7 @@
             margin-top: 40px;
         }
 
-        /* NEW: Lightbox Modal Styles */
+        /* Lightbox Modal Styles */
         .lightbox-modal {
             display: none;
             position: fixed;
@@ -285,7 +284,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.85);
-            /* Dark faded background */
             justify-content: center;
             align-items: center;
             opacity: 0;
@@ -323,6 +321,55 @@
 
         .lightbox-close:hover {
             color: #bdc3c7;
+        }
+
+        /* NEW: Contact Form Styles */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+            margin: 30px auto 0 auto;
+            width: 90%;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+            font-family: inherit;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: outline 0.2s ease;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: 3px solid #3498db;
+            background-color: #fff;
+        }
+
+        .contact-form button {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-top: 10px;
+        }
+
+        .contact-form button:hover {
+            background-color: #2980b9;
+        }
+
+        .contact-form button:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -517,13 +564,20 @@
     </section>
 
     <section id="contact"
-        style="background-color: #2c3e50; background-image: url('galaxy.jpg'); background-size: cover; background-position: center; color: white; margin-top: 50px;">
+        style="background-color: #2c3e50; background-image: url('galaxy.jpg'); background-size: cover; background-position: center; color: white; margin-top: 50px; padding-bottom: 60px;">
         <h2>Let's Connect</h2>
         <p>Interested in working together or just want to say hi?</p>
-        <br>
-        <a href="mailto:chriskarayiannis2001@gmail.com"
-            style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Email
-            Me</a>
+        <p style="font-size: 1.1em; margin-bottom: 10px;">Feel free to reach out directly at <a
+                href="mailto:chriskarayiannis2001@gmail.com"
+                style="color: #3498db; text-decoration: none; font-weight: bold;">chriskarayiannis2001@gmail.com</a></p>
+        <p>Or send me a message right here:</p>
+
+        <form name="contact" method="POST" data-netlify="true" class="contact-form">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
     </section>
 
     <div id="lightbox" class="lightbox-modal" onclick="closeLightbox()">
@@ -550,7 +604,6 @@
             });
         }, { passive: false });
 
-        // Database for Timeline
         const expData = {
             'tutor': {
                 theme: 'work',
@@ -568,14 +621,7 @@
                 theme: 'work',
                 title: 'Hardware & Mechatronics Engineer @ Jaguar Land Rover',
                 text: 'Presented data-backed conclusions to 50+ stakeholders and eliminated redundant requirements via Excel statistical analysis. Streamlined Agile task management in Jira and implemented Six Sigma DMAIC techniques, reducing turnaround time by 2 days.',
-                images: [
-                    'JLR-1.jpg',
-                    'JLR-2.jpg',
-                    'JLR-3.jpg',
-                    'JLR-4.jpg',
-                    'JLR-5.jpg',
-                    'JLR-6.jpg'
-                ]
+                images: ['JLR-1.jpg', 'JLR-2.jpg', 'JLR-3.jpg', 'JLR-4.jpg', 'JLR-5.jpg', 'JLR-6.jpg']
             },
             'research': {
                 theme: 'work',
@@ -624,13 +670,11 @@
         const timelineOrder = ['tutor', 'meng', 'jlr', 'research', 'sufst', 'kpmg', 'army', 'ftc', 'alevels'];
         let activeBoxId = null;
 
-        // NEW: Functions to open and close the Lightbox
         function openLightbox(imgSrc) {
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightbox-img');
             lightboxImg.src = imgSrc;
             lightbox.classList.add('show');
-            // Prevent background scrolling while viewing the image
             document.body.style.overflow = 'hidden';
         }
 
@@ -684,7 +728,6 @@
 
             if (imgArray.length > 0) {
                 imgArray.forEach((imgSrc, index) => {
-                    // NEW: Added onclick trigger for the Lightbox
                     imagesHTML += `<img src="${imgSrc}" class="detail-real-img" alt="Experience Image ${index + 1}" onclick="openLightbox(this.src)">`;
                 });
             } else {
