@@ -31,7 +31,6 @@
             font-weight: bold;
         }
 
-        /* Added a hover effect for the CK logo */
         nav h2 a {
             transition: opacity 0.2s ease;
         }
@@ -78,7 +77,6 @@
 
         .youtube-btn {
             display: none;
-            /* Hidden by default */
             background-color: #c4302b;
             color: white;
             padding: 12px 20px;
@@ -92,7 +90,6 @@
         .image-gallery {
             display: grid;
             grid-template-columns: 1fr 1.5fr 1fr;
-            /* 3 columns, center is wider */
             gap: 25px;
             align-items: start;
         }
@@ -111,7 +108,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
             cursor: pointer;
-            /* Makes it clear the image is clickable */
         }
 
         .image-gallery img:hover {
@@ -128,7 +124,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.85);
-            /* Dark faded background */
             justify-content: center;
             align-items: center;
             opacity: 0;
@@ -173,7 +168,7 @@
 <body>
 
     <nav>
-        <h2><a href="index.html">CK.</a></h2>
+        <h2><a href="index.html" style="text-decoration: none; color: inherit;">CK.</a></h2>
         <div><a href="index.html#projects">Back to Portfolio</a></div>
     </nav>
 
@@ -193,7 +188,6 @@
     </div>
 
     <script>
-        // Database specific to the project pages
         const projectData = {
             '1': {
                 title: 'Quadcopter Project',
@@ -208,8 +202,15 @@
             },
             '2': {
                 title: 'Robot Walker Project',
-                desc: 'Details and information about the Robot Walker Project will be displayed here. You can add images for this project to the array below when you are ready.',
-                images: ['RobotWalker-1.jpg', 'RobotWalker-2.jpg'],
+                desc: 'Details and information about the Robot Walker Project will be displayed here.',
+                video: 'RobotWalker-video.mp4',
+                images: [
+                    'RobotWalker-1.jpg',
+                    'RobotWalker-5.jpg',
+                    'RobotWalker-3.jpg',
+                    'RobotWalker-4.jpg'
+                ],
+                bottomImage: 'RobotWalker-2.jpg',
                 youtube: 'https://www.youtube.com/@QuadrupedalRobot-GDP'
             },
             '3': {
@@ -219,22 +220,20 @@
             }
         };
 
-        // Functions to open and close the Lightbox
         function openLightbox(imgSrc) {
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightbox-img');
             lightboxImg.src = imgSrc;
             lightbox.classList.add('show');
-            document.body.style.overflow = 'hidden'; // Stop background scrolling
+            document.body.style.overflow = 'hidden';
         }
 
         function closeLightbox() {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('show');
-            document.body.style.overflow = 'auto'; // Restore background scrolling
+            document.body.style.overflow = 'auto';
         }
 
-        // Grab the "?id=1" from the URL and match it to your database
         const params = new URLSearchParams(window.location.search);
         const projectId = params.get('id');
         const data = projectData[projectId];
@@ -255,8 +254,8 @@
             let leftImagesHTML = '';
             let rightImagesHTML = '';
             let videoHTML = '';
+            let bottomImageHTML = '';
 
-            // Check for and add the video if it exists
             if (data.video) {
                 videoHTML = `
                     <video controls autoplay muted loop style="width: 100%; height: 615px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
@@ -266,7 +265,6 @@
                 `;
             }
 
-            // Check for and add images, splitting them into two columns
             if (data.images && data.images.length > 0) {
                 let leftImageItems = '';
                 let rightImageItems = '';
@@ -280,11 +278,18 @@
                 });
                 leftImagesHTML = `<div class="image-column">${leftImageItems}</div>`;
                 rightImagesHTML = `<div class="image-column">${rightImageItems}</div>`;
-            } else {
-                if (!data.video) gallery.innerHTML = '<p><em>More images coming soon...</em></p>';
             }
 
-            gallery.innerHTML = leftImagesHTML + videoHTML + rightImagesHTML;
+            // Checks for a bottom image and makes it span across all 3 columns
+            if (data.bottomImage) {
+                bottomImageHTML = `<img src="${data.bottomImage}" alt="${data.title} Expanded Image" style="grid-column: 1 / -1; width: 100%; height: auto; max-height: 700px; object-fit: cover; border-radius: 8px; margin-top: 15px;" onclick="openLightbox(this.src)">`;
+            }
+
+            if ((!data.images || data.images.length === 0) && !data.video && !data.bottomImage) {
+                gallery.innerHTML = '<p><em>More images coming soon...</em></p>';
+            } else {
+                gallery.innerHTML = leftImagesHTML + (data.video ? videoHTML : '') + rightImagesHTML + bottomImageHTML;
+            }
         } else {
             document.getElementById('proj-title').innerText = 'Project Not Found';
             document.getElementById('proj-desc').innerText = 'The project you are looking for does not exist or has been moved.';
